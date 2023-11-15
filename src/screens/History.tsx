@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { HistoryCard } from '@components/HistoryCard'
 import { ScreenHeader } from '@components/ScreenHeader'
 import { Heading, VStack, SectionList, Text } from 'native-base'
@@ -38,6 +39,7 @@ export function History() {
             Let's exercise?
           </Text>
         )}
+        showsVerticalScrollIndicator={false}
       />
     </VStack>
   )
