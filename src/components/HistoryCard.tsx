@@ -12,12 +12,13 @@ export function HistoryCard() {
       alignItems="center"
       justifyContent="space-between"
     >
-      <VStack>
+      <VStack flex={1}>
         <Heading
           color="white"
           fontSize="md"
           textTransform="capitalize"
           fontFamily="heading"
+          numberOfLines={1}
         >
           Back
         </Heading>

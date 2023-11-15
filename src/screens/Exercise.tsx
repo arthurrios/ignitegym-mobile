@@ -1,4 +1,13 @@
-import { Box, HStack, Heading, Icon, Image, Text, VStack } from 'native-base'
+import {
+  Box,
+  HStack,
+  Heading,
+  Icon,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+} from 'native-base'
 import { TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -45,45 +54,46 @@ export function Exercise() {
           </HStack>
         </HStack>
       </VStack>
+      <ScrollView>
+        <VStack p={8}>
+          <Image
+            w="full"
+            h={80}
+            source={{
+              uri: 'https://hips.hearstapps.com/hmg-prod/images/form-check-index-1591205064.png?crop=0.888888888888889xw:1xh;center,top&resize=1200:*',
+            }}
+            alt="Exercise name"
+            mb={3}
+            resizeMode="cover"
+            rounded="lg"
+            overflow="hidden"
+          />
 
-      <VStack p={8}>
-        <Image
-          w="full"
-          h={80}
-          source={{
-            uri: 'https://hips.hearstapps.com/hmg-prod/images/form-check-index-1591205064.png?crop=0.888888888888889xw:1xh;center,top&resize=1200:*',
-          }}
-          alt="Exercise name"
-          mb={3}
-          resizeMode="cover"
-          rounded="lg"
-          overflow="hidden"
-        />
+          <Box bg="gray.600" rounded="md" pb={4} px={4}>
+            <HStack
+              alignItems="center"
+              justifyContent="space-around"
+              mb={6}
+              mt={5}
+            >
+              <HStack alignItems="center">
+                <SeriesSvg />
+                <Text color="gray.200" ml="2">
+                  3 sets
+                </Text>
+              </HStack>
 
-        <Box bg="gray.600" rounded="md" pb={4} px={4}>
-          <HStack
-            alignItems="center"
-            justifyContent="space-around"
-            mb={6}
-            mt={5}
-          >
-            <HStack alignItems="center">
-              <SeriesSvg />
-              <Text color="gray.200" ml="2">
-                3 sets
-              </Text>
+              <HStack alignItems="center">
+                <RepetitionsSvg />
+                <Text color="gray.200" ml="2">
+                  12 reps
+                </Text>
+              </HStack>
             </HStack>
-
-            <HStack alignItems="center">
-              <RepetitionsSvg />
-              <Text color="gray.200" ml="2">
-                12 reps
-              </Text>
-            </HStack>
-          </HStack>
-          <Button title="Mark as done" />
-        </Box>
-      </VStack>
+            <Button title="Mark as done" />
+          </Box>
+        </VStack>
+      </ScrollView>
     </VStack>
   )
 }
