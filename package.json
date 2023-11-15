@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
-    "@gluestack-style/react": "^1.0.15",
-    "@gluestack-ui/themed": "^1.0.13",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
