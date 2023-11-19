@@ -5,6 +5,8 @@ import { Input } from '@components/Input'
 import { Button } from '@components/Button'
 import { useNavigation } from '@react-navigation/native'
 import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 type FormDataProps = {
   name: string
@@ -13,6 +15,19 @@ type FormDataProps = {
   passwordConfirm: string
 }
 
+const signUpSchema = yup.object({
+  name: yup.string().required('Enter a name'),
+  email: yup.string().required('Enter an email').email('Invalid email'),
+  password: yup
+    .string()
+    .required('Enter a password')
+    .min(6, 'Password must be at least 6 characters long'),
+  passwordConfirm: yup
+    .string()
+    .required('Confirm password')
+    .oneOf([yup.ref('password')], 'Passwords does not match'),
+})
+
 export function SignUp() {
   const navigation = useNavigation()
 
@@ -20,7 +35,9 @@ export function SignUp() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>()
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signUpSchema),
+  })
 
   function handleGoBack() {
     navigation.goBack()
@@ -70,9 +87,6 @@ export function SignUp() {
           <Controller
             control={control}
             name="name"
-            rules={{
-              required: 'Enter a name',
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Name"
@@ -86,13 +100,6 @@ export function SignUp() {
           <Controller
             control={control}
             name="email"
-            rules={{
-              required: 'Enter an e-mail',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid e-mail',
-              },
-            }}
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="E-mail"
@@ -114,6 +121,7 @@ export function SignUp() {
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.password?.message}
               />
             )}
           />
@@ -129,6 +137,7 @@ export function SignUp() {
                 value={value}
                 onSubmitEditing={handleSubmit(handleSignUp)}
                 returnKeyType="send"
+                errorMessage={errors.passwordConfirm?.message}
               />
             )}
           />
@@ -142,7 +151,7 @@ export function SignUp() {
         <Button
           title="Back to Log in"
           variant="outline"
-          mt={24}
+          mt={12}
           onPress={handleGoBack}
         />
       </VStack>
