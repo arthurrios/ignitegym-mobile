@@ -9,11 +9,16 @@ import { useForm, Controller } from 'react-hook-form'
 export function SignUp() {
   const navigation = useNavigation()
 
-  const { control } = useForm()
+  const { control, handleSubmit } = useForm()
 
   function handleGoBack() {
     navigation.goBack()
   }
+
+  function handleSignUp(data: any) {
+    console.log(data)
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -85,11 +90,16 @@ export function SignUp() {
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
+                onSubmitEditing={handleSubmit(handleSignUp)}
+                returnKeyType="send"
               />
             )}
           />
 
-          <Button title="Create and Log in" />
+          <Button
+            title="Create and Log in"
+            onPress={handleSubmit(handleSignUp)}
+          />
         </Center>
 
         <Button
