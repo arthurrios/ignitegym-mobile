@@ -5,12 +5,31 @@ import { Input } from '@components/Input'
 import { Button } from '@components/Button'
 import { useNavigation } from '@react-navigation/native'
 import { AuthNavigationRoutesProps } from '@routes/auth.routes'
+import { Controller, useForm } from 'react-hook-form'
+import { useAuth } from '@hooks/useAuth'
+
+type FormData = {
+  email: string
+  password: string
+}
 
 export function SignIn() {
+  const { signIn } = useAuth()
+
   const navigation = useNavigation<AuthNavigationRoutesProps>()
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>()
 
   function handleNewAccount() {
     navigation.navigate('signUp')
+  }
+
+  function handleSignIn({ email, password }: FormData) {
+    signIn(email, password)
   }
 
   return (
@@ -40,14 +59,36 @@ export function SignIn() {
             Log into your account
           </Heading>
 
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: 'Enter email' }}
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
-          <Input placeholder="Password" secureTextEntry />
 
-          <Button title="Log in" />
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: 'Enter password' }}
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="Password"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.email?.message}
+              />
+            )}
+          />
+
+          <Button title="Log in" onPress={handleSubmit(handleSignIn)} />
         </Center>
 
         <Center mt={24}>
