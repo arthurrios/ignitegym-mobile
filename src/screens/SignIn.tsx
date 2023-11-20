@@ -1,4 +1,12 @@
-import { Center, Heading, Image, Text, VStack, ScrollView } from 'native-base'
+import {
+  Center,
+  Heading,
+  Image,
+  Text,
+  VStack,
+  ScrollView,
+  useToast,
+} from 'native-base'
 import LogoSvg from '@assets/logo.svg'
 import BackgroundImg from '@assets/background.png'
 import { Input } from '@components/Input'
@@ -7,6 +15,8 @@ import { useNavigation } from '@react-navigation/native'
 import { AuthNavigationRoutesProps } from '@routes/auth.routes'
 import { Controller, useForm } from 'react-hook-form'
 import { useAuth } from '@hooks/useAuth'
+import { AppError } from '@utils/AppError'
+import { useState } from 'react'
 
 type FormData = {
   email: string
@@ -14,7 +24,11 @@ type FormData = {
 }
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { signIn } = useAuth()
+
+  const toast = useToast()
 
   const navigation = useNavigation<AuthNavigationRoutesProps>()
 
@@ -28,8 +42,22 @@ export function SignIn() {
     navigation.navigate('signUp')
   }
 
-  function handleSignIn({ email, password }: FormData) {
-    signIn(email, password)
+  async function handleSignIn({ email, password }: FormData) {
+    try {
+      setIsLoading(true)
+      await signIn(email, password)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+
+      const title = isAppError ? error.message : 'Login failed. Try again.'
+
+      setIsLoading(false)
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      })
+    }
   }
 
   return (
@@ -88,7 +116,11 @@ export function SignIn() {
             )}
           />
 
-          <Button title="Log in" onPress={handleSubmit(handleSignIn)} />
+          <Button
+            title="Log in"
+            onPress={handleSubmit(handleSignIn)}
+            isLoading={isLoading}
+          />
         </Center>
 
         <Center mt={24}>
