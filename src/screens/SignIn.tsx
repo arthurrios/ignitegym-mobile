@@ -112,6 +112,8 @@ export function SignIn() {
                 secureTextEntry
                 onChangeText={onChange}
                 errorMessage={errors.email?.message}
+                onSubmitEditing={handleSubmit(handleSignIn)}
+                returnKeyType="send"
               />
             )}
           />
