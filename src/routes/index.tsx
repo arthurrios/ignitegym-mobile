@@ -9,8 +9,6 @@ export function Routes() {
   const { colors } = useTheme()
   const { user, isLoadingUserStorageData } = useAuth()
 
-  console.log('USUÁRIO LOGADO =>', user)
-
   const theme = DefaultTheme
   theme.colors.background = colors.gray[700]
 
