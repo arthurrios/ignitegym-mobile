@@ -1,10 +1,14 @@
 import { HStack, Heading, Icon, Image, Text, VStack } from 'native-base'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
+import { ExerciseDTO } from '@dtos/ExerciseDTO'
+import { api } from '@services/api'
 
-type Props = TouchableOpacityProps
+type Props = TouchableOpacityProps & {
+  data: ExerciseDTO
+}
 
-export function ExerciseCard({ ...props }: Props) {
+export function ExerciseCard({ data, ...props }: Props) {
   return (
     <TouchableOpacity {...props}>
       <HStack
@@ -17,7 +21,7 @@ export function ExerciseCard({ ...props }: Props) {
       >
         <Image
           source={{
-            uri: 'https://hips.hearstapps.com/hmg-prod/images/form-check-index-1591205064.png?crop=0.888888888888889xw:1xh;center,top&resize=1200:*',
+            uri: `${api.defaults.baseURL}/exercise/thumb/${data.thumb}`,
           }}
           alt="Exercise image"
           w={16}
@@ -29,11 +33,11 @@ export function ExerciseCard({ ...props }: Props) {
 
         <VStack flex={1}>
           <Heading color="white" fontSize="lg" fontFamily="heading">
-            One-arm dumbbell row
+            {data.name}
           </Heading>
 
           <Text fontSize="sm" color="gray.200" mt={1} numberOfLines={2}>
-            3 sets x 12 reps
+            {data.series} sets x {data.repetitions} reps
           </Text>
         </VStack>
         <Icon as={Entypo} name="chevron-thin-right" color="gray.300" />
