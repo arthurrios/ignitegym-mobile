@@ -37,7 +37,7 @@ const signUpSchema = yup.object({
   passwordConfirm: yup
     .string()
     .required('Confirm password')
-    .oneOf([yup.ref('password')], 'Passwords does not match'),
+    .oneOf([yup.ref('password')], 'Passwords do not match'),
 })
 
 export function SignUp() {

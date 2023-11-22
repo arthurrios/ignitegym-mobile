@@ -16,7 +16,11 @@ import { TouchableOpacity } from 'react-native'
 import { Controller, useForm } from 'react-hook-form'
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuth } from '@hooks/useAuth'
+import { api } from '@services/api'
+import { AppError } from '@utils/AppError'
 
 const PHOTO_SIZE = 33
 
@@ -28,7 +32,30 @@ type FormDataProps = {
   confirmPassword: string
 }
 
+const profileSchema = yup.object({
+  name: yup.string().required('Enter a name'),
+  password: yup
+    .string()
+    .min(6, 'Password must be at least 6 characters long')
+    .nullable()
+    .transform((value) => value || null),
+  confirmPassword: yup
+    .string()
+    .nullable()
+    .transform((value) => value || null)
+    .oneOf([yup.ref('password')], 'Passwords do not match')
+    .when('password', {
+      is: (Field: any) => Field,
+      then: (schema) =>
+        schema
+          .nullable()
+          .required('Enter password confirmation')
+          .transform((value) => value || null),
+    }),
+})
+
 export function Profile() {
+  const [isUpdating, setIsUpdating] = useState(false)
   const [photoIsLoading, setPhotoIsLoading] = useState(false)
   const [userPhoto, setUserPhoto] = useState(
     'https://github.com/arthurrios.png',
@@ -36,11 +63,16 @@ export function Profile() {
 
   const toast = useToast()
   const { user } = useAuth()
-  const { control } = useForm<FormDataProps>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
     },
+    resolver: yupResolver(profileSchema),
   })
 
   async function handleUserPhotoSelect() {
@@ -75,6 +107,33 @@ export function Profile() {
       console.log(error)
     } finally {
       setPhotoIsLoading(false)
+    }
+  }
+
+  async function handleProfileUpdate(data: FormDataProps) {
+    try {
+      setIsUpdating(true)
+
+      await api.put('/users', { ...data, old_password: data.oldPassword })
+
+      toast.show({
+        title: 'Profile updated successfully',
+        placement: 'top',
+        bgColor: 'green.500',
+      })
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError
+        ? error.message
+        : 'Error updating profile. Try again later.'
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      })
+    } finally {
+      setIsUpdating(false)
     }
   }
 
@@ -119,6 +178,7 @@ export function Profile() {
                 bg="gray.600"
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.name?.message}
               />
             )}
           />
@@ -148,15 +208,53 @@ export function Profile() {
             Change password
           </Heading>
 
-          <Input placeholder="Old password" bg="gray.600" secureTextEntry />
-          <Input placeholder="New password" bg="gray.600" secureTextEntry />
-          <Input
-            placeholder="Confirm new password"
-            bg="gray.600"
-            secureTextEntry
+          <Controller
+            control={control}
+            name="oldPassword"
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="Old password"
+                bg="gray.600"
+                secureTextEntry
+                onChangeText={onChange}
+              />
+            )}
           />
 
-          <Button title="Update" mt={4} />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="New password"
+                bg="gray.600"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="Confirm new password"
+                bg="gray.600"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.confirmPassword?.message}
+              />
+            )}
+          />
+
+          <Button
+            title="Update"
+            mt={4}
+            onPress={handleSubmit(handleProfileUpdate)}
+            isLoading={isUpdating}
+          />
         </Center>
       </ScrollView>
     </VStack>

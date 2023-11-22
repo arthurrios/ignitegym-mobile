@@ -73,7 +73,7 @@ export function Exercise() {
       toast.show({
         title: 'Well done! Exercise registered in your history.',
         placement: 'top',
-        bgColor: 'green.700',
+        bgColor: 'green.500',
       })
 
       navigation.navigate('history')
