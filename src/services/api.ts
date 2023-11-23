@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 /* eslint-disable camelcase */
 import {
   storageAuthTokenGet,
