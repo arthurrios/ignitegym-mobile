@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-useless-catch */
 import { UserDTO } from '@dtos/UserDTO'
 import { api } from '@services/api'
