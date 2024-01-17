@@ -6,6 +6,7 @@ import {
 } from '@storage/storageAuthToken'
 import { AppError } from '@utils/AppError'
 import axios, { AxiosError, AxiosInstance } from 'axios'
+import { Platform } from 'react-native'
 
 type SignOut = () => void
 
@@ -18,8 +19,10 @@ type APIInstanceProps = AxiosInstance & {
   registerInterceptTokenManager: (signOut: SignOut) => () => void
 }
 
+const root = Platform.OS === 'ios' ? '127.0.0.1' : '10.0.2.2'
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:3333',
+  baseURL: `http://${root}:3333`,
 }) as APIInstanceProps
 
 let failedQueue: Array<PromiseType> = []
