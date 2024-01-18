@@ -12,12 +12,14 @@ import { Routes } from '@routes/index'
 import { AuthContextProvider } from '@contexts/AuthContext'
 import { useEffect } from 'react'
 import { oneSignalInitialize } from '@libs/oneSignal'
+import { daysSinceLastExercise } from '@utils/daysSinceLastExercise'
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
   useEffect(() => {
     oneSignalInitialize()
+    daysSinceLastExercise()
   }, [])
 
   return (

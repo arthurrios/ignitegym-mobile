@@ -36,7 +36,10 @@
       ],
       "@libs/*": [
         "./src/libs/*"
-      ]
+      ],
+      "@notifications/*": [
+        "./src/notifications/*"
+      ],
     }
   }
 }

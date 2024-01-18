@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const LAST_EXERCISE_STORAGE = '@IGNITEGYM_LAST_EXERCISE_STORAGE'
+export const LAST_EXERCISE_STORAGE = '@IGNITEGYM_LAST_EXERCISE_STORAGE'
 
 export type StorageLastExerciseProps = {
   id: string
-  date: Date
+  date: number
 }
 
 export async function storageLastExerciseGet() {

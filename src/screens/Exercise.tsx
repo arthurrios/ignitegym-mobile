@@ -82,7 +82,7 @@ export function Exercise() {
 
       const newExerciseDone: StorageLastExerciseProps = {
         id: exerciseId,
-        date: new Date(),
+        date: new Date().getTime(),
       }
       await storageLastExerciseSave(newExerciseDone)
       navigation.navigate('history')
