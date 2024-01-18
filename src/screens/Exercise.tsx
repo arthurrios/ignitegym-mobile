@@ -22,6 +22,10 @@ import { api } from '@services/api'
 import { useEffect, useState } from 'react'
 import { ExerciseDTO } from '@dtos/ExerciseDTO'
 import { Loading } from '@components/Loading'
+import {
+  StorageLastExerciseProps,
+  storageLastExerciseSave,
+} from '@storage/storageLastExercise'
 
 type RoutesParamsProps = {
   exerciseId: string
@@ -76,6 +80,11 @@ export function Exercise() {
         bgColor: 'green.500',
       })
 
+      const newExerciseDone: StorageLastExerciseProps = {
+        id: exerciseId,
+        date: new Date(),
+      }
+      await storageLastExerciseSave(newExerciseDone)
       navigation.navigate('history')
     } catch (error) {
       const isAppError = error instanceof AppError
