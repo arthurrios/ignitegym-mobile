@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { StatusBar } from 'react-native'
+import { AppState, NativeEventSubscription, StatusBar } from 'react-native'
 import {
   useFonts,
   Roboto_400Regular,
@@ -13,14 +13,25 @@ import { AuthContextProvider } from '@contexts/AuthContext'
 import { useEffect } from 'react'
 import { oneSignalInitialize } from '@libs/oneSignal'
 import { daysSinceLastExercise } from '@utils/daysSinceLastExercise'
+import { storageExercisesSave } from '@storage/storageExercises'
+import { tagNewExercisesAdded } from '@notifications/notificationTags'
+import { useAppState } from '@react-native-community/hooks'
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
+  const appState = useAppState()
 
   useEffect(() => {
     oneSignalInitialize()
     daysSinceLastExercise()
+    storageExercisesSave()
   }, [])
+
+  useEffect(() => {
+    if (appState === 'active') {
+      tagNewExercisesAdded(false)
+    }
+  }, [appState])
 
   return (
     <NativeBaseProvider theme={THEME}>

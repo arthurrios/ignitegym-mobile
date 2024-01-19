@@ -9,6 +9,7 @@ import { FlatList, HStack, Heading, Text, VStack, useToast } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
 import { ExerciseDTO } from '@dtos/ExerciseDTO'
 import { Loading } from '@components/Loading'
+import { storageExercisesIdsSave } from '@storage/storageExercisesIds'
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -43,8 +44,10 @@ export function Home() {
     try {
       setIsLoading(true)
 
-      const response = await api.get(`/exercises/bygroup/${groupSelected}`)
-      setExercises(response.data)
+      const { data } = await api.get<ExerciseDTO[]>(
+        `/exercises/bygroup/${groupSelected}`,
+      )
+      setExercises(data)
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Error fetching exercises'
