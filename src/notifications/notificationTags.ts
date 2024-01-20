@@ -7,3 +7,7 @@ export function tagDaysNotWorkingOut(daysCount: string) {
 export function tagExercisesDoneLastWeek(exercisesCount: string) {
   OneSignal.User.addTag('exercises_done_last_week', exercisesCount)
 }
+
+export function tagIsLoggedIn(userLoggedIn: string) {
+  OneSignal.User.addTag('is_logged_in', userLoggedIn)
+}
