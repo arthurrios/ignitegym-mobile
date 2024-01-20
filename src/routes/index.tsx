@@ -10,6 +10,20 @@ import { OSNotification, OneSignal } from 'react-native-onesignal'
 import { NotificationEventTypeMap } from 'react-native-onesignal/dist/models/NotificationEvents'
 import { Notification } from '@components/Notification'
 
+const linking = {
+  prefixes: ['com.rocketseat.ignitegym://', 'exp+ignitegym://', 'ignitegym://'],
+  config: {
+    screens: {
+      exercise: {
+        path: 'exercise/:exerciseId',
+        parse: {
+          exerciseId: (exerciseId: string) => exerciseId,
+        },
+      },
+    },
+  },
+}
+
 export function Routes() {
   const { colors } = useTheme()
   const { user, isLoadingUserStorageData } = useAuth()
@@ -43,7 +57,7 @@ export function Routes() {
 
   return (
     <Box flex={1} bg="gray.700">
-      <NavigationContainer>
+      <NavigationContainer theme={theme} linking={linking}>
         {user.id ? <AppRoutes /> : <AuthRoutes />}
         {notification?.title && (
           <Notification
