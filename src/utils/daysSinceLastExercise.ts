@@ -1,19 +1,14 @@
 import { tagDaysNotWorkingOut } from '@notifications/notificationTags'
 import { api } from '@services/api'
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
+import { dateToDayjsLocal } from './dateToDayjsLocal'
 
 export async function daysSinceLastExercise() {
   const { data } = await api.get('/history')
 
-  const lastExerciseDate = dayjs
-    .utc(data[0].data[0].created_at)
-    .local()
-    .valueOf()
+  const lastExerciseDate = dateToDayjsLocal(
+    data[0].data[0].created_at,
+  ).valueOf()
 
   const currentDate = dayjs().valueOf()
 

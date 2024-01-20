@@ -13,6 +13,7 @@ import { AuthContextProvider } from '@contexts/AuthContext'
 import { useEffect } from 'react'
 import { oneSignalInitialize } from '@libs/oneSignal'
 import { daysSinceLastExercise } from '@utils/daysSinceLastExercise'
+import { filterExercisesDoneLastWeek } from '@utils/filterExercisesDoneLastWeek'
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
@@ -20,6 +21,7 @@ export default function App() {
   useEffect(() => {
     oneSignalInitialize()
     daysSinceLastExercise()
+    filterExercisesDoneLastWeek()
   }, [])
 
   return (
